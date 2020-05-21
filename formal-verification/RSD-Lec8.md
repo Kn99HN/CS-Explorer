@@ -152,6 +152,9 @@ g(a) = c & (f(g(a)) != f(c) | g(a) = d) & c != d
 -> Send[1, !2 | 3, !4, !1 | 2, !1 | !3 | 4] to SAT solver
 -> SAT solver detecs unsat
 
+- SAT solver handles all propositional reasoning
+- Theory solvers only need to reason about conjunction of literals
+
 
 
 
