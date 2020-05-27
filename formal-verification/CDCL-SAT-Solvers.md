@@ -33,3 +33,13 @@
 - The decision level for an unassigned variable x is -1.
 - Formally speaking, the decision level of x with antecedent ω is given by:
     δ(x) = max({0} U {δ(x} | y in ω & y != x})
+=> The decision level of an implied literal is either the highest level of implied literals in a unit clause, or it is 0 in case the clause is unit. 
+- Notation x = v@d means ν(x) = v and δ(x) = d. Moreover, the decision level of a literal is defined as the decision level of its variable
+
+#### Example
+
+`δ = (x1 | ~x4) & (x1 | x3) & (~x3 | x2 | x4)`
+
+- Assume x4 = 0 @ 1. Unit propagation yields no additional implied assignments. 
+- Assume x1 = 0 @ 2. Unit propagation yields x3 = 1 @ 2 and x2 = 1 @ 2 
+
