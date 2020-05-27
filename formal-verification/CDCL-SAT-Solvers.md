@@ -36,6 +36,11 @@
 => The decision level of an implied literal is either the highest level of implied literals in a unit clause, or it is 0 in case the clause is unit. 
 - Notation x = v@d means ν(x) = v and δ(x) = d. Moreover, the decision level of a literal is defined as the decision level of its variable
 
+#### Note
+- A literal is a variable or its negation
+- A clause is a disjunction of literals: a | b
+- A unit clause contains only one literal: a, ~a
+
 #### Example
 
 `δ = (x1 | ~x4) & (x1 | x3) & (~x3 | x2 | x4)`
@@ -43,3 +48,37 @@
 - Assume x4 = 0 @ 1. Unit propagation yields no additional implied assignments. 
 - Assume x1 = 0 @ 2. Unit propagation yields x3 = 1 @ 2 and x2 = 1 @ 2 
 
+=> Explanation: 
+- First step x4 = 0, then we have:
+`(x1 | 1) & (x1 | x3) & (~x3 | x2 | 0)`
+- Next, x1 = 0, then we have
+`(0 | 1) & (0 | x3) & (~x3 | x2 | 0)`
+- Then for the other two clauses to satisfied, we can apply unit propagation to have x3 = 1:
+`(0 | 1) & (0 | 1) & (~0 | x2 | 0)`
+- Similarly, we can also infer for the last clause to be satisfied x2 = 1
+
+- Assigned variables and antecedents define a directed acyclu graph I = (V, E), which is the implication graph.
+- Vertices of the implication graph are defined by all assigned variables and one node k, V in X U {k}.
+- The edges in the graph are the antecedent of each assigned variable: 
+    - If ω = α(x) => a directed edge from each variable in ω to x.
+    - If unit propagation yields an unsatisfied clause j, then a special vertex k is used to represent the unsatisfied clause.
+
+# Organization of CDCL Solvers
+
+```
+CDCL(φ,ν)
+    if(UnitPropagation(φ,ν) == CONFLICT)
+        then return UNSAT
+    dl = 0 <- Decision level
+    while(! AllVariablesAssigned(φ,ν)):
+        do (x,v) = PickBranchingVariable(φ,ν) <- Decision stage
+            dl = dl + 1
+            ν = ν U {(x,v)}
+            if(UnitProp(φ,ν) == CONFLICT): <- Deduce stage
+                then Β = ConflictAnalysis(φ,ν) <- Diagnose Stage
+                    if B < 0:
+                        return UNSAT
+                        else Backtrack(φ,ν,Β)
+                            dl = B
+    return SAT
+```
