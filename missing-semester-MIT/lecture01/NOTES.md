@@ -69,3 +69,4 @@ rwxr-xr-x 1 root  root  4096 Jun 20  2019 var
 
 - When running a file as script, we might not have full access to it to we have to use sh.
 - `#!/bin/sh` is a comment, the program when see this, knows that it should run `/bin/sh`, passing the scripts as the first argument.
+- For exercise 2, I place the scripts inside the function. We then add it to a saved bulletin called `source`, we then execute the function/command using name. 
